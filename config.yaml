@@ -1,0 +1,183 @@
+project:
+  name: AStockLab
+  timezone: Asia/Shanghai
+  strategy_version: v0.1.0
+
+qlib:
+  provider_uri: D:/Quant/data/qlib_bin
+  region: cn
+  kernels: 1
+  benchmark: SH000300
+  market: all
+
+database:
+  path: data/astocklab.duckdb
+  parquet_dir: data/parquet
+
+data:
+  cache_dir: data/cache
+  cache_ttl_seconds: 3600
+  request_timeout_seconds: 30
+  request_retries: 3
+  refresh:
+    stock_master_days: 1
+    snapshot_minutes: 5
+    financial_days: 7
+  price_history_start: '2015-01-01'
+  default_adjustment: qfq
+
+market:
+  universe: all
+  min_listing_trading_days: 120
+  exclude_st: true
+  exclude_delisting: true
+  exclude_long_suspension_days: 20
+  min_average_amount_20d: 20000000
+  universes:
+    - all
+    - hs300
+    - zz500
+    - zz800
+    - star
+    - chinext
+    - sh
+    - sz
+    - bj
+
+factors:
+  winsor_lower: 0.01
+  winsor_upper: 0.99
+  normalization: percentile
+  weights:
+    quality: 0.25
+    value: 0.20
+    growth: 0.15
+    momentum: 0.20
+    trend: 0.10
+    risk: 0.10
+  auxiliary_weights:
+    liquidity: 0.00
+  dimensions:
+    value:
+      ep: 0.30
+      bp: 0.25
+      sales_yield: 0.15
+      dividend_yield: 0.15
+      fcf_yield: 0.15
+    quality:
+      roe: 0.25
+      roa: 0.15
+      roic: 0.15
+      gross_margin: 0.10
+      net_margin: 0.10
+      ocf_to_profit: 0.15
+      debt_ratio: -0.10
+    growth:
+      revenue_yoy: 0.35
+      profit_yoy: 0.35
+      eps_growth: 0.20
+      revenue_cagr_3y: 0.10
+    momentum:
+      momentum_20: 0.15
+      momentum_60: 0.25
+      momentum_120: 0.25
+      momentum_250: 0.15
+      momentum_12_1: 0.20
+    trend:
+      price_ma20: 0.15
+      price_ma60: 0.20
+      price_ma120: 0.20
+      price_ma250: 0.15
+      ma60_slope: 0.15
+      trend_consistency: 0.15
+    risk:
+      volatility_20: -0.20
+      volatility_60: -0.20
+      downside_volatility_60: -0.20
+      max_drawdown_120: -0.20
+      atr_14: -0.10
+      extreme_move_20: -0.10
+    liquidity:
+      average_amount_20: 0.50
+      average_turnover_20: 0.25
+      amihud_20: -0.25
+
+model:
+  type: lightgbm_alpha158
+  artifact_path: models/qlib_lightgbm.joblib
+  train_start: '2015-01-01'
+  train_end: '2022-12-31'
+  valid_start: '2023-01-01'
+  valid_end: '2024-12-31'
+  test_start: '2025-01-01'
+  test_end: '2026-12-31'
+  label: Ref($close, -2) / Ref($close, -1) - 1
+  parameters:
+    loss: mse
+    colsample_bytree: 0.8879
+    learning_rate: 0.0421
+    subsample: 0.8789
+    lambda_l1: 205.6999
+    lambda_l2: 580.9768
+    max_depth: 8
+    num_leaves: 210
+    num_threads: 8
+    verbosity: -1
+    n_estimators: 1000
+    early_stopping_rounds: 50
+
+ensemble:
+  factor_weight: 0.50
+  qlib_weight: 0.50
+  missing_qlib_policy: factor_only
+
+strategy:
+  top_n: 50
+  rebalance: weekly
+  signal_at: close
+  execution_at: next_open
+  confirmation_days: 5
+  model_exit_percentile: 0.40
+  trend_ma_primary: 60
+  trend_ma_hard: 120
+  trailing_stop: 0.18
+
+risk:
+  thresholds:
+    volatility_20_annualized: 0.55
+    max_drawdown: 0.25
+    atr_spike_multiple: 2.0
+    amount_drop_ratio: 0.35
+
+trading:
+  initial_cash: 1000000
+  commission_rate: 0.0003
+  min_commission: 5.0
+  stamp_duty_rate: 0.0005
+  slippage_rate: 0.001
+  board_lot: 100
+  t_plus_one: true
+  respect_price_limits: true
+  price_limit_main: 0.10
+  price_limit_growth_star: 0.20
+  price_limit_bj: 0.30
+
+backtest:
+  benchmark: SH000300
+  default_top_n: 20
+  default_rebalance: weekly
+  execution_delay_days: 1
+  point_in_time_financials_required: true
+
+ui:
+  default_top_n: 50
+  refresh_interval_seconds: 60
+  page_title: AStockLab
+  layout: wide
+
+scheduler:
+  enabled: false
+  hour: 18
+  minute: 0
+  weekdays: mon-fri
+

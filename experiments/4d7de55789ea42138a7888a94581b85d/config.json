@@ -1,0 +1,52 @@
+{
+  "signals": "D:\\Quant\\qlib-source\\examples\\benchmarks\\LightGBM\\mlruns\\617139966901327605\\989fa225d1074f6fa6a64c1183b5a52b\\artifacts\\pred.pkl",
+  "top_n": 20,
+  "rebalance": "weekly",
+  "trading": {
+    "initial_cash": 1000000,
+    "commission_rate": 0.0003,
+    "min_commission": 5.0,
+    "stamp_duty_rate": 0.0005,
+    "slippage_rate": 0.001,
+    "board_lot": 100,
+    "t_plus_one": true,
+    "respect_price_limits": true,
+    "price_limit_main": 0.1,
+    "price_limit_growth_star": 0.2,
+    "price_limit_bj": 0.3
+  },
+  "execution_assumption": "T 日收盘形成信号，T+1 交易日开盘成交",
+  "price_adjustment": "Qlib normalized prices; corporate-action return continuity preserved",
+  "bias_audit": [
+    {
+      "name": "look_ahead",
+      "status": "pass",
+      "message": "信号后延迟 1 个交易日成交"
+    },
+    {
+      "name": "signal_duplicates",
+      "status": "pass",
+      "message": "重复信号 0 行"
+    },
+    {
+      "name": "financial_point_in_time",
+      "status": "not_applicable",
+      "message": "本次信号未使用财务字段"
+    },
+    {
+      "name": "survivorship",
+      "status": "pass",
+      "message": "使用时点股票池"
+    },
+    {
+      "name": "selection_bias",
+      "status": "warning",
+      "message": "策略/参数若根据本次结果选择，必须用独立样本外区间复核"
+    },
+    {
+      "name": "overfitting",
+      "status": "warning",
+      "message": "单次回测不能排除过拟合；应使用 walk-forward 与多版本对比"
+    }
+  ]
+}

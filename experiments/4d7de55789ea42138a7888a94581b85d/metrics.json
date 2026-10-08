@@ -1,0 +1,17 @@
+{
+  "cumulative_return": 1.4612005964245718,
+  "annualized_return": 0.29768019728083006,
+  "annualized_volatility": 0.30150955120606476,
+  "benchmark_return": 0.42758166790008545,
+  "benchmark_annualized_return": 0.1084843223642622,
+  "excess_return": 1.0336189285244863,
+  "sharpe": 1.0158183272740176,
+  "sortino": 1.3633139323008039,
+  "max_drawdown": -0.2388860326952228,
+  "calmar": 1.2461180501943303,
+  "win_rate": 0.5357142857142857,
+  "turnover": 144.94035802284242,
+  "trade_count": 6237,
+  "average_holding_days": 8.927236315086782,
+  "ending_equity": 2461200.5964245717
+}

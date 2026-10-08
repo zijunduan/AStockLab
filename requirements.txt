@@ -1,0 +1,19 @@
+# AStockLab direct dependencies. Qlib is intentionally pinned, never auto-upgraded.
+pyqlib==0.9.7
+lightgbm==4.7.0
+akshare==1.19.1
+streamlit==1.65.0
+duckdb==1.5.6
+pyarrow==25.0.1
+plotly==7.1.0
+APScheduler==3.11.3
+pydantic==2.13.5
+PyYAML==6.0.3
+joblib==1.6.0
+requests==2.34.2
+tenacity==9.2.1
+loguru==0.7.3
+pytest==9.1.1
+pandas==3.0.6
+numpy==2.4.6
+
